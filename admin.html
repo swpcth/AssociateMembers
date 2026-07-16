@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบหลังบ้าน | จัดการสมาชิกวิสามัญ</title><link rel="icon" type="image/png" href="https://img1.pic.in.th/images/11zon_cropped-69920d554baea9a3.png">
+<title>ระบบจัดการข้อมูลสมาชิกวิสามัญ</title><link rel="icon" type="image/png" href="https://img1.pic.in.th/images/11zon_cropped-69920d554baea9a3.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -147,7 +147,7 @@
     <div class="icon" style="overflow:hidden;padding:0;background:#fff;">
       <img src="https://img1.pic.in.th/images/11zon_cropped5df24c47ef9f067c.png" alt="ตราสภาวิชาชีพสังคมสงเคราะห์" style="width:100%;height:100%;object-fit:cover;">
     </div>
-    <h1>ระบบหลังบ้าน</h1>
+    <h1>ระบบจัดการข้อมูลสมาชิกวิสามัญ</h1>
     <p>จัดการข้อมูลสมาชิกวิสามัญ สภาวิชาชีพสังคมสงเคราะห์</p>
     <input type="text" id="userInput" placeholder="ชื่อผู้ใช้" autocomplete="off">
     <input type="password" id="pwInput" placeholder="รหัสผ่าน" autocomplete="off">
@@ -178,12 +178,13 @@
   <header class="top">
     <div>
       <h1>จัดการสมาชิกวิสามัญ</h1>
-      <div class="sub" id="welcomeText">สภาวิชาชีพสังคมสงเคราะห์ — ระบบหลังบ้าน</div>
+      <div class="sub" id="welcomeText">สภาวิชาชีพสังคมสงเคราะห์ — ระบบจัดการข้อมูลสมาชิกวิสามัญ</div>
     </div>
     <div style="display:flex;gap:10px;flex-wrap:wrap;">
       <button class="btn" id="refreshBtn">รีเฟรชข้อมูล</button>
       <button class="btn primary" id="addManualBtn">+ เพิ่มสมาชิกเดิม</button>
       <button class="btn" id="manageAdminsBtn">จัดการผู้ดูแลระบบ</button>
+      <button class="btn" id="setupSheetBtn">ตั้งค่าคอลัมน์อัตโนมัติ</button>
       <button class="btn" id="logoutBtn">ออกจากระบบ</button>
     </div>
   </header>
@@ -504,6 +505,20 @@
   document.getElementById('logoutBtn').addEventListener('click', function(){
     sessionStorage.removeItem('vsws_admin_session');
     location.reload();
+  });
+
+  document.getElementById('setupSheetBtn').addEventListener('click', async function(){
+    if (!confirm('ตั้งค่าหัวตาราง ความกว้างคอลัมน์ ตัวเลือก dropdown และสีไฮไลต์สถานะในชีตอัตโนมัติ?\n(ไม่ลบข้อมูลที่มีอยู่)')) return;
+    const btn = this;
+    btn.disabled = true; btn.textContent = 'กำลังตั้งค่า...';
+    try {
+      const result = await callApi('adminSetupSheet');
+      alert(result.ok ? (result.message || 'ตั้งค่าเรียบร้อยแล้ว') : (result.error || 'เกิดข้อผิดพลาด'));
+    } catch (err) {
+      alert('เชื่อมต่อไม่สำเร็จ กรุณาลองใหม่');
+    } finally {
+      btn.disabled = false; btn.textContent = 'ตั้งค่าคอลัมน์อัตโนมัติ';
+    }
   });
 
   // ---------- Load data ----------
