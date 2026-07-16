@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ระบบหลังบ้าน | จัดการสมาชิกวิสามัญ</title>
+<title>ระบบหลังบ้าน | จัดการสมาชิกวิสามัญ</title><link rel="icon" type="image/png" href="https://img1.pic.in.th/images/11zon_cropped-69920d554baea9a3.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -32,7 +32,7 @@
   h1,h2,h3{font-family:'Sarabun',sans-serif;font-weight:700;margin:0;}
 
   /* ---------- Login screen ---------- */
-  #loginScreen{
+  #loginScreen, #setupScreen{
     min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
   }
   .login-card{
@@ -149,9 +149,27 @@
     </div>
     <h1>ระบบหลังบ้าน</h1>
     <p>จัดการข้อมูลสมาชิกวิสามัญ สภาวิชาชีพสังคมสงเคราะห์</p>
-    <input type="password" id="pwInput" placeholder="รหัสผ่านเจ้าหน้าที่" autocomplete="off">
+    <input type="text" id="userInput" placeholder="ชื่อผู้ใช้" autocomplete="off">
+    <input type="password" id="pwInput" placeholder="รหัสผ่าน" autocomplete="off">
     <button id="loginBtn">เข้าสู่ระบบ</button>
     <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- FIRST-RUN SETUP (สร้างผู้ดูแลระบบคนแรก) -->
+<div id="setupScreen" style="display:none;">
+  <div class="login-card" style="max-width:420px;">
+    <div class="icon" style="overflow:hidden;padding:0;background:#fff;">
+      <img src="https://img1.pic.in.th/images/11zon_cropped5df24c47ef9f067c.png" alt="ตราสภาวิชาชีพสังคมสงเคราะห์" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+    <h1>ตั้งค่าเริ่มต้น</h1>
+    <p>ยังไม่มีบัญชีผู้ดูแลระบบ กรุณาสร้างบัญชีแรกเพื่อเริ่มใช้งาน</p>
+    <input type="text" id="setupUser" placeholder="ตั้งชื่อผู้ใช้" autocomplete="off">
+    <input type="text" id="setupDisplayName" placeholder="ชื่อที่แสดง (เช่น ชื่อ-นามสกุลเจ้าหน้าที่)" autocomplete="off">
+    <input type="password" id="setupPw" placeholder="ตั้งรหัสผ่าน" autocomplete="off">
+    <input type="password" id="setupPw2" placeholder="ยืนยันรหัสผ่านอีกครั้ง" autocomplete="off">
+    <button id="setupBtn">สร้างบัญชีผู้ดูแลระบบ</button>
+    <div class="login-error" id="setupError"></div>
   </div>
 </div>
 
@@ -160,11 +178,12 @@
   <header class="top">
     <div>
       <h1>จัดการสมาชิกวิสามัญ</h1>
-      <div class="sub">สภาวิชาชีพสังคมสงเคราะห์ — ระบบหลังบ้าน</div>
+      <div class="sub" id="welcomeText">สภาวิชาชีพสังคมสงเคราะห์ — ระบบหลังบ้าน</div>
     </div>
-    <div style="display:flex;gap:10px;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
       <button class="btn" id="refreshBtn">รีเฟรชข้อมูล</button>
       <button class="btn primary" id="addManualBtn">+ เพิ่มสมาชิกเดิม</button>
+      <button class="btn" id="manageAdminsBtn">จัดการผู้ดูแลระบบ</button>
       <button class="btn" id="logoutBtn">ออกจากระบบ</button>
     </div>
   </header>
@@ -320,16 +339,72 @@
   </div>
 </div>
 
+<!-- MODAL: จัดการผู้ดูแลระบบ -->
+<div class="modal-overlay" id="adminsModal">
+  <div class="modal" style="max-width:640px;">
+    <h3>จัดการผู้ดูแลระบบ</h3>
+
+    <div style="overflow-x:auto;margin-bottom:20px;">
+      <table>
+        <thead><tr><th>ชื่อผู้ใช้</th><th>ชื่อที่แสดง</th><th>เข้าสู่ระบบล่าสุด</th><th>การจัดการ</th></tr></thead>
+        <tbody id="adminsTableBody"><tr><td colspan="4" class="empty">กำลังโหลด...</td></tr></tbody>
+      </table>
+    </div>
+
+    <h3 style="font-size:.95rem;margin-bottom:10px;">+ เพิ่มผู้ดูแลระบบใหม่</h3>
+    <div class="grid2">
+      <div class="field"><label>ชื่อผู้ใช้</label><input id="newAdminUser"></div>
+      <div class="field"><label>ชื่อที่แสดง</label><input id="newAdminDisplayName"></div>
+      <div class="field"><label>รหัสผ่าน</label><input type="password" id="newAdminPw"></div>
+    </div>
+    <div class="modal-actions" style="justify-content:flex-start;">
+      <button class="btn primary" id="addAdminConfirm">เพิ่มผู้ดูแลระบบ</button>
+    </div>
+    <div class="modal-msg" id="addAdminMsg"></div>
+
+    <hr style="border:none;border-top:1px solid var(--line);margin:20px 0;">
+
+    <h3 style="font-size:.95rem;margin-bottom:10px;">เปลี่ยนรหัสผ่านของฉัน</h3>
+    <div class="grid2">
+      <div class="field"><label>รหัสผ่านใหม่</label><input type="password" id="myNewPw"></div>
+      <div class="field"><label>ยืนยันรหัสผ่านใหม่</label><input type="password" id="myNewPw2"></div>
+    </div>
+    <div class="modal-actions" style="justify-content:flex-start;">
+      <button class="btn primary" id="changeMyPwConfirm">เปลี่ยนรหัสผ่าน</button>
+    </div>
+    <div class="modal-msg" id="changeMyPwMsg"></div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('adminsModal')">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: รีเซ็ตรหัสผ่านผู้ดูแลระบบคนอื่น -->
+<div class="modal-overlay" id="resetPwModal">
+  <div class="modal">
+    <h3>รีเซ็ตรหัสผ่าน: <span id="resetPwUserLabel"></span></h3>
+    <div class="field"><label>รหัสผ่านใหม่</label><input type="password" id="resetPwNew"></div>
+    <div class="field"><label>ยืนยันรหัสผ่านใหม่</label><input type="password" id="resetPwNew2"></div>
+    <div class="modal-msg" id="resetPwMsg"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('resetPwModal')">ยกเลิก</button>
+      <button class="btn primary" id="resetPwConfirm">บันทึกรหัสผ่านใหม่</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // ⚠️ แก้ไข URL นี้ให้เป็น URL ของ Apps Script Web App เดียวกับ index.html
   const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDpDHZsr9n22zwtLwZ33DYSyjENsb-ZrV2l_IYvnPqRh3DmWwGcW1A8ah2vW2OO_vN/exec';
 
-  let ADMIN_PW = sessionStorage.getItem('vsws_admin_pw') || '';
+  let SESSION = JSON.parse(sessionStorage.getItem('vsws_admin_session') || 'null'); // {username, password, displayName}
   let MEMBERS = [];
   let ACTIVE_APP_NO = null;
 
   async function callApi(action, extra){
-    const payload = Object.assign({ action, password: ADMIN_PW }, extra || {});
+    const auth = SESSION ? { username: SESSION.username, password: SESSION.password, staffName: SESSION.displayName || SESSION.username } : {};
+    const payload = Object.assign({ action }, auth, extra || {});
     const res = await fetch(SCRIPT_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -338,27 +413,86 @@
     return res.json();
   }
 
+  function showScreen(id){
+    ['loginScreen','setupScreen','dashboard'].forEach(s => {
+      document.getElementById(s).style.display = (s === id) ? (s === 'dashboard' ? 'block' : 'flex') : 'none';
+    });
+  }
+
+  // ---------- Determine initial screen: setup vs login vs dashboard ----------
+  async function init(){
+    if (SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
+      document.getElementById('loginError').textContent = 'ยังไม่ได้ตั้งค่า SCRIPT_URL — โปรดดู README.md';
+      showScreen('loginScreen');
+      return;
+    }
+    if (SESSION){
+      const result = await callApi('adminLogin');
+      if (result.ok){
+        SESSION.displayName = result.displayName;
+        sessionStorage.setItem('vsws_admin_session', JSON.stringify(SESSION));
+        enterDashboard();
+        return;
+      }
+      sessionStorage.removeItem('vsws_admin_session');
+      SESSION = null;
+    }
+    const check = await callApi('adminCheckSetup');
+    showScreen(check.ok && !check.hasAdmins ? 'setupScreen' : 'loginScreen');
+  }
+  init();
+
+  function enterDashboard(){
+    document.getElementById('welcomeText').textContent =
+      'เข้าสู่ระบบในนาม ' + (SESSION.displayName || SESSION.username) + ' — สภาวิชาชีพสังคมสงเคราะห์';
+    showScreen('dashboard');
+    loadAll();
+  }
+
+  // ---------- First-run setup ----------
+  document.getElementById('setupBtn').addEventListener('click', async function(){
+    const username = document.getElementById('setupUser').value.trim();
+    const displayName = document.getElementById('setupDisplayName').value.trim();
+    const pw = document.getElementById('setupPw').value;
+    const pw2 = document.getElementById('setupPw2').value;
+    const errEl = document.getElementById('setupError');
+    errEl.textContent = '';
+    if (!username || !pw){ errEl.textContent = 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'; return; }
+    if (pw !== pw2){ errEl.textContent = 'รหัสผ่านทั้งสองช่องไม่ตรงกัน'; return; }
+    if (pw.length < 4){ errEl.textContent = 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'; return; }
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'adminBootstrap', username, password: pw, displayName })
+    });
+    const result = await res.json();
+    if (result.ok){
+      SESSION = { username, password: pw, displayName: displayName || username };
+      sessionStorage.setItem('vsws_admin_session', JSON.stringify(SESSION));
+      enterDashboard();
+    } else {
+      errEl.textContent = result.error || 'สร้างบัญชีไม่สำเร็จ';
+    }
+  });
+
   // ---------- Login ----------
   document.getElementById('loginBtn').addEventListener('click', doLogin);
   document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+  document.getElementById('userInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
   async function doLogin(){
+    const username = document.getElementById('userInput').value.trim();
     const pw = document.getElementById('pwInput').value;
     const errEl = document.getElementById('loginError');
     errEl.textContent = '';
-    if (!pw){ errEl.textContent = 'กรุณากรอกรหัสผ่าน'; return; }
-    if (SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
-      errEl.textContent = 'ยังไม่ได้ตั้งค่า SCRIPT_URL — โปรดดู README.md';
-      return;
-    }
-    ADMIN_PW = pw;
+    if (!username || !pw){ errEl.textContent = 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'; return; }
+    SESSION = { username, password: pw };
     try {
       const result = await callApi('adminLogin');
       if (result.ok){
-        sessionStorage.setItem('vsws_admin_pw', ADMIN_PW);
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        loadAll();
+        SESSION.displayName = result.displayName;
+        sessionStorage.setItem('vsws_admin_session', JSON.stringify(SESSION));
+        enterDashboard();
       } else {
         errEl.textContent = result.error || 'เข้าสู่ระบบไม่สำเร็จ';
       }
@@ -368,7 +502,7 @@
   }
 
   document.getElementById('logoutBtn').addEventListener('click', function(){
-    sessionStorage.removeItem('vsws_admin_pw');
+    sessionStorage.removeItem('vsws_admin_session');
     location.reload();
   });
 
@@ -581,18 +715,110 @@
     else { msg.textContent = (result.error || 'เกิดข้อผิดพลาด') + (result.details ? ' (' + result.details.join(', ') + ')' : ''); msg.className = 'modal-msg error'; }
   });
 
-  // ---------- Auto-login if session has password ----------
-  if (ADMIN_PW){
-    callApi('adminLogin').then(result => {
-      if (result.ok){
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboard').style.display = 'block';
-        loadAll();
-      } else {
-        sessionStorage.removeItem('vsws_admin_pw');
-      }
+  // ---------- จัดการผู้ดูแลระบบ ----------
+  document.getElementById('manageAdminsBtn').addEventListener('click', function(){
+    document.getElementById('newAdminUser').value = '';
+    document.getElementById('newAdminDisplayName').value = '';
+    document.getElementById('newAdminPw').value = '';
+    document.getElementById('myNewPw').value = '';
+    document.getElementById('myNewPw2').value = '';
+    document.getElementById('addAdminMsg').textContent = '';
+    document.getElementById('changeMyPwMsg').textContent = '';
+    openModal('adminsModal');
+    loadAdminsList();
+  });
+
+  async function loadAdminsList(){
+    const tbody = document.getElementById('adminsTableBody');
+    tbody.innerHTML = '<tr><td colspan="4" class="empty">กำลังโหลด...</td></tr>';
+    const result = await callApi('adminListAdmins');
+    if (!result.ok){
+      tbody.innerHTML = '<tr><td colspan="4" class="empty">โหลดไม่สำเร็จ: ' + (result.error || '') + '</td></tr>';
+      return;
+    }
+    const admins = result.admins;
+    const canDelete = admins.length > 1;
+    tbody.innerHTML = admins.map(a => `
+      <tr>
+        <td>${a.username}${a.username === SESSION.username ? ' <span style="color:var(--teal);">(ฉัน)</span>' : ''}</td>
+        <td>${a.displayName || '-'}</td>
+        <td>${fmtDate(a.lastLogin)}</td>
+        <td class="row-actions">
+          <button class="btn small" onclick="openResetPw('${a.username}')">รีเซ็ตรหัสผ่าน</button>
+          <button class="btn small danger" ${canDelete ? '' : 'disabled title="ต้องมีผู้ดูแลระบบอย่างน้อย 1 คน"'} onclick="deleteAdmin('${a.username}')">ลบ</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  document.getElementById('addAdminConfirm').addEventListener('click', async function(){
+    const newUsername = document.getElementById('newAdminUser').value.trim();
+    const newDisplayName = document.getElementById('newAdminDisplayName').value.trim();
+    const newPassword = document.getElementById('newAdminPw').value;
+    const msg = document.getElementById('addAdminMsg');
+    if (!newUsername || !newPassword){ msg.textContent = 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน'; msg.className = 'modal-msg error'; return; }
+    if (newPassword.length < 4){ msg.textContent = 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'; msg.className = 'modal-msg error'; return; }
+    msg.textContent = 'กำลังบันทึก...'; msg.className = 'modal-msg';
+    const result = await callApi('adminAddAdmin', { newUsername, newDisplayName, newPassword });
+    if (result.ok){
+      msg.textContent = 'เพิ่มผู้ดูแลระบบสำเร็จ'; msg.className = 'modal-msg ok';
+      document.getElementById('newAdminUser').value = '';
+      document.getElementById('newAdminDisplayName').value = '';
+      document.getElementById('newAdminPw').value = '';
+      loadAdminsList();
+    } else {
+      msg.textContent = result.error || 'เกิดข้อผิดพลาด'; msg.className = 'modal-msg error';
+    }
+  });
+
+  function deleteAdmin(username){
+    if (!confirm('ยืนยันลบผู้ดูแลระบบ "' + username + '"? การลบไม่สามารถย้อนกลับได้')) return;
+    callApi('adminDeleteAdminAccount', { targetUsername: username }).then(result => {
+      if (result.ok) loadAdminsList();
+      else alert(result.error || 'ลบไม่สำเร็จ');
     });
   }
+
+  let RESET_PW_TARGET = null;
+  function openResetPw(username){
+    RESET_PW_TARGET = username;
+    document.getElementById('resetPwUserLabel').textContent = username;
+    document.getElementById('resetPwNew').value = '';
+    document.getElementById('resetPwNew2').value = '';
+    document.getElementById('resetPwMsg').textContent = '';
+    openModal('resetPwModal');
+  }
+  document.getElementById('resetPwConfirm').addEventListener('click', async function(){
+    const pw = document.getElementById('resetPwNew').value;
+    const pw2 = document.getElementById('resetPwNew2').value;
+    const msg = document.getElementById('resetPwMsg');
+    if (pw !== pw2){ msg.textContent = 'รหัสผ่านทั้งสองช่องไม่ตรงกัน'; msg.className = 'modal-msg error'; return; }
+    if (pw.length < 4){ msg.textContent = 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'; msg.className = 'modal-msg error'; return; }
+    msg.textContent = 'กำลังบันทึก...'; msg.className = 'modal-msg';
+    const result = await callApi('adminSetPassword', { targetUsername: RESET_PW_TARGET, newPassword: pw });
+    if (result.ok){ closeModal('resetPwModal'); }
+    else { msg.textContent = result.error || 'เกิดข้อผิดพลาด'; msg.className = 'modal-msg error'; }
+  });
+
+  document.getElementById('changeMyPwConfirm').addEventListener('click', async function(){
+    const pw = document.getElementById('myNewPw').value;
+    const pw2 = document.getElementById('myNewPw2').value;
+    const msg = document.getElementById('changeMyPwMsg');
+    if (pw !== pw2){ msg.textContent = 'รหัสผ่านทั้งสองช่องไม่ตรงกัน'; msg.className = 'modal-msg error'; return; }
+    if (pw.length < 4){ msg.textContent = 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'; msg.className = 'modal-msg error'; return; }
+    msg.textContent = 'กำลังบันทึก...'; msg.className = 'modal-msg';
+    const result = await callApi('adminSetPassword', { newPassword: pw });
+    if (result.ok){
+      SESSION.password = pw;
+      sessionStorage.setItem('vsws_admin_session', JSON.stringify(SESSION));
+      msg.textContent = 'เปลี่ยนรหัสผ่านสำเร็จ'; msg.className = 'modal-msg ok';
+      document.getElementById('myNewPw').value = '';
+      document.getElementById('myNewPw2').value = '';
+    } else {
+      msg.textContent = result.error || 'เกิดข้อผิดพลาด'; msg.className = 'modal-msg error';
+    }
+  });
+
 </script>
 </body>
 </html>
