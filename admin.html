@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ระบบหลังบ้าน | จัดการสมาชิกวิสามัญ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1B2E;
+    --panel:#16233A;
+    --panel-2:#1D2E4A;
+    --line:#2A3B58;
+    --ink:#E8ECF4;
+    --ink-soft:#9AA8C0;
+    --navy:#2C4E8A;
+    --teal:#25A0B5;
+    --red:#D8555A;
+    --gold:#D3A24A;
+    --green:#3FAE72;
+    --radius:6px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);color:var(--ink);
+    font-family:'Sarabun',sans-serif;font-size:15px;line-height:1.55;
+    min-height:100vh;
+  }
+  a{color:var(--teal);}
+  h1,h2,h3{font-family:'Sarabun',sans-serif;font-weight:700;margin:0;}
+
+  /* ---------- Login screen ---------- */
+  #loginScreen{
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .login-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:40px 34px;max-width:380px;width:100%;text-align:center;
+    box-shadow:0 30px 60px rgba(0,0,0,.35);
+  }
+  .login-card .icon{
+    width:56px;height:56px;border-radius:50%;background:var(--navy);margin:0 auto 18px;
+    display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  }
+  .login-card h1{font-size:1.25rem;color:#fff;margin-bottom:6px;}
+  .login-card p{color:var(--ink-soft);font-size:.88rem;margin-bottom:22px;}
+  .login-card input{
+    width:100%;padding:11px 12px;border-radius:4px;border:1px solid var(--line);
+    background:#0F1B2E;color:var(--ink);font-family:'Sarabun',sans-serif;font-size:.95rem;margin-bottom:12px;
+  }
+  .login-card input:focus{outline:none;border-color:var(--teal);}
+  .login-card button{
+    width:100%;padding:12px;border:none;border-radius:4px;background:var(--teal);color:#04202A;
+    font-weight:700;font-family:'Sarabun',sans-serif;cursor:pointer;font-size:.95rem;
+  }
+  .login-card button:hover{background:#2cb7cd;}
+  .login-error{color:var(--red);font-size:.85rem;margin-top:10px;min-height:18px;}
+
+  /* ---------- Dashboard ---------- */
+  #dashboard{display:none;}
+  header.top{
+    background:var(--panel);border-bottom:1px solid var(--line);
+    padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+  }
+  header.top h1{font-size:1.15rem;color:#fff;}
+  header.top .sub{color:var(--ink-soft);font-size:.82rem;}
+  .btn{
+    border:1px solid var(--line);background:var(--panel-2);color:var(--ink);
+    padding:9px 16px;border-radius:4px;font-family:'Sarabun',sans-serif;font-size:.87rem;
+    cursor:pointer;font-weight:600;
+  }
+  .btn:hover{border-color:var(--teal);color:var(--teal);}
+  .btn.primary{background:var(--teal);border-color:var(--teal);color:#04202A;}
+  .btn.primary:hover{background:#2cb7cd;}
+  .btn.danger{border-color:var(--red);color:var(--red);background:transparent;}
+  .btn.danger:hover{background:rgba(216,85,90,.12);}
+  .btn.small{padding:5px 10px;font-size:.78rem;}
+
+  main.wrap{max-width:1200px;margin:0 auto;padding:24px;}
+
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px;}
+  .stat-card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;
+  }
+  .stat-card .num{font-family:'Sarabun',sans-serif;font-size:1.7rem;color:#fff;}
+  .stat-card .label{color:var(--ink-soft);font-size:.8rem;margin-top:2px;}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+  .toolbar input, .toolbar select{
+    padding:9px 12px;border-radius:4px;border:1px solid var(--line);background:var(--panel);
+    color:var(--ink);font-family:'Sarabun',sans-serif;font-size:.87rem;
+  }
+  .toolbar input{flex:1;min-width:180px;}
+
+  table{width:100%;border-collapse:collapse;background:var(--panel);border-radius:var(--radius);overflow:hidden;}
+  thead th{
+    text-align:left;font-size:.78rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em;
+    padding:12px 14px;border-bottom:1px solid var(--line);background:var(--panel-2);
+  }
+  tbody td{padding:12px 14px;border-bottom:1px solid var(--line);font-size:.87rem;vertical-align:top;}
+  tbody tr:hover{background:rgba(255,255,255,.02);}
+  .badge{
+    display:inline-block;padding:3px 9px;border-radius:20px;font-size:.75rem;font-weight:600;
+  }
+  .badge.pending{background:rgba(211,162,74,.18);color:var(--gold);}
+  .badge.approved{background:rgba(63,174,114,.18);color:var(--green);}
+  .badge.rejected{background:rgba(216,85,90,.18);color:var(--red);}
+  .badge.other{background:rgba(154,168,192,.18);color:var(--ink-soft);}
+  .row-actions{display:flex;gap:6px;flex-wrap:wrap;}
+  .empty{padding:40px;text-align:center;color:var(--ink-soft);}
+
+  /* ---------- Modal ---------- */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;
+    padding:20px;z-index:100;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    max-width:560px;width:100%;max-height:88vh;overflow-y:auto;padding:26px 26px 22px;
+  }
+  .modal h3{color:#fff;font-size:1.1rem;margin-bottom:14px;}
+  .modal .field{margin-bottom:12px;}
+  .modal label{display:block;font-size:.8rem;color:var(--ink-soft);margin-bottom:4px;}
+  .modal input, .modal select, .modal textarea{
+    width:100%;padding:9px 10px;border-radius:4px;border:1px solid var(--line);
+    background:#0F1B2E;color:var(--ink);font-family:'Sarabun',sans-serif;font-size:.9rem;
+  }
+  .modal .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .modal-msg{font-size:.85rem;margin-top:10px;min-height:18px;}
+  .modal-msg.error{color:var(--red);}
+  .modal-msg.ok{color:var(--green);}
+  .detail-list{font-size:.85rem;}
+  .detail-list dt{color:var(--ink-soft);margin-top:8px;}
+  .detail-list dd{margin:2px 0 0;color:var(--ink);}
+  .detail-list a{word-break:break-all;}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="icon" style="overflow:hidden;padding:0;background:#fff;">
+      <img src="https://img1.pic.in.th/images/11zon_cropped5df24c47ef9f067c.png" alt="ตราสภาวิชาชีพสังคมสงเคราะห์" style="width:100%;height:100%;object-fit:cover;">
+    </div>
+    <h1>ระบบหลังบ้าน</h1>
+    <p>จัดการข้อมูลสมาชิกวิสามัญ สภาวิชาชีพสังคมสงเคราะห์</p>
+    <input type="password" id="pwInput" placeholder="รหัสผ่านเจ้าหน้าที่" autocomplete="off">
+    <button id="loginBtn">เข้าสู่ระบบ</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <header class="top">
+    <div>
+      <h1>จัดการสมาชิกวิสามัญ</h1>
+      <div class="sub">สภาวิชาชีพสังคมสงเคราะห์ — ระบบหลังบ้าน</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn" id="refreshBtn">รีเฟรชข้อมูล</button>
+      <button class="btn primary" id="addManualBtn">+ เพิ่มสมาชิกเดิม</button>
+      <button class="btn" id="logoutBtn">ออกจากระบบ</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="stats" id="statsRow"></div>
+
+    <div class="toolbar">
+      <input type="text" id="searchInput" placeholder="ค้นหาชื่อ, องค์กร, เลขที่ใบสมัคร...">
+      <select id="statusFilter">
+        <option value="">ทุกสถานะ</option>
+        <option value="รอตรวจสอบ">รอตรวจสอบ</option>
+        <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
+        <option value="ปฏิเสธ">ปฏิเสธ</option>
+      </select>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>เลขที่ใบสมัคร</th>
+            <th>ชื่อ-นามสกุล</th>
+            <th>องค์กร</th>
+            <th>แพ็กเกจ</th>
+            <th>สถานะ</th>
+            <th>วันหมดอายุ</th>
+            <th>การจัดการ</th>
+          </tr>
+        </thead>
+        <tbody id="memberTableBody">
+          <tr><td colspan="7" class="empty">กำลังโหลดข้อมูล...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL: รายละเอียด/แก้ไข -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <h3 id="detailTitle">รายละเอียดสมาชิก</h3>
+    <dl class="detail-list" id="detailBody"></dl>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('detailModal')">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: อนุมัติ -->
+<div class="modal-overlay" id="approveModal">
+  <div class="modal">
+    <h3>อนุมัติใบสมัคร</h3>
+    <div class="field">
+      <label>จำนวนปีสมาชิกภาพ</label>
+      <select id="approveYears"><option value="1">1 ปี</option><option value="5">5 ปี</option></select>
+    </div>
+    <div class="field">
+      <label>หมายเหตุ (ถ้ามี)</label>
+      <textarea id="approveNote" rows="2"></textarea>
+    </div>
+    <div class="modal-msg" id="approveMsg"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('approveModal')">ยกเลิก</button>
+      <button class="btn primary" id="approveConfirm">ยืนยันอนุมัติ</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ปฏิเสธ -->
+<div class="modal-overlay" id="rejectModal">
+  <div class="modal">
+    <h3>ปฏิเสธใบสมัคร</h3>
+    <div class="field">
+      <label>เหตุผล</label>
+      <textarea id="rejectReason" rows="3" placeholder="ระบุเหตุผล เช่น เอกสารไม่ครบถ้วน"></textarea>
+    </div>
+    <div class="modal-msg" id="rejectMsg"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('rejectModal')">ยกเลิก</button>
+      <button class="btn danger" id="rejectConfirm">ยืนยันปฏิเสธ</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ต่ออายุ -->
+<div class="modal-overlay" id="renewModal">
+  <div class="modal">
+    <h3>ต่ออายุสมาชิกภาพ</h3>
+    <div class="field">
+      <label>ต่ออายุเพิ่ม (ปี)</label>
+      <select id="renewYears"><option value="1">1 ปี</option><option value="5">5 ปี</option></select>
+    </div>
+    <div class="field">
+      <label>หมายเหตุ (ถ้ามี)</label>
+      <textarea id="renewNote" rows="2"></textarea>
+    </div>
+    <div class="modal-msg" id="renewMsg"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('renewModal')">ยกเลิก</button>
+      <button class="btn primary" id="renewConfirm">ยืนยันต่ออายุ</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: แก้ไขข้อมูล -->
+<div class="modal-overlay" id="editModal">
+  <div class="modal">
+    <h3>แก้ไขข้อมูลสมาชิก</h3>
+    <div class="grid2">
+      <div class="field"><label>ชื่อ-นามสกุล</label><input id="editFullName"></div>
+      <div class="field"><label>ชื่อองค์กร</label><input id="editOrgName"></div>
+      <div class="field"><label>เบอร์มือถือ</label><input id="editMobile"></div>
+      <div class="field"><label>E-mail</label><input id="editEmail"></div>
+    </div>
+    <div class="field"><label>หมายเหตุเจ้าหน้าที่</label><textarea id="editNote" rows="2"></textarea></div>
+    <div class="modal-msg" id="editMsg"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('editModal')">ยกเลิก</button>
+      <button class="btn primary" id="editConfirm">บันทึกการแก้ไข</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: เพิ่มสมาชิกเดิม -->
+<div class="modal-overlay" id="manualModal">
+  <div class="modal">
+    <h3>เพิ่มสมาชิกเดิม (ก่อนใช้งานระบบออนไลน์)</h3>
+    <p style="color:var(--ink-soft);font-size:.83rem;margin-top:-6px;">
+      ใช้สำหรับนำเข้าข้อมูลสมาชิกที่สมัครไว้ก่อนหน้านี้ ระบบจะตั้งสถานะเป็น "อนุมัติแล้ว" ทันที โดยไม่ต้องแนบเอกสาร
+    </p>
+    <div class="grid2">
+      <div class="field"><label>ชื่อ-นามสกุล *</label><input id="mFullName"></div>
+      <div class="field"><label>ชื่อองค์กร *</label><input id="mOrgName"></div>
+      <div class="field"><label>เลขบัตรประชาชน/อื่นๆ *</label><input id="mIdNumber"></div>
+      <div class="field"><label>เบอร์มือถือ *</label><input id="mMobile"></div>
+      <div class="field">
+        <label>ประเภทองค์กร *</label>
+        <select id="mOrgType"><option value="องค์กรภาครัฐ">องค์กรภาครัฐ</option><option value="องค์กรภาคเอกชน">องค์กรภาคเอกชน</option></select>
+      </div>
+      <div class="field">
+        <label>แพ็กเกจสมาชิกภาพ *</label>
+        <select id="mDuesPackage"><option value="1ปี">1 ปี</option><option value="5ปี">5 ปี</option></select>
+      </div>
+      <div class="field"><label>วันที่อนุมัติ (ค่าเริ่มต้น = วันนี้)</label><input type="date" id="mApprovedDate"></div>
+      <div class="field"><label>เลขที่ใบสมัคร (เว้นว่างให้ระบบสร้างให้)</label><input id="mAppNo"></div>
+    </div>
+    <div class="modal-msg" id="manualMsg"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('manualModal')">ยกเลิก</button>
+      <button class="btn primary" id="manualConfirm">บันทึกสมาชิก</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ⚠️ แก้ไข URL นี้ให้เป็น URL ของ Apps Script Web App เดียวกับ index.html
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDpDHZsr9n22zwtLwZ33DYSyjENsb-ZrV2l_IYvnPqRh3DmWwGcW1A8ah2vW2OO_vN/exec';
+
+  let ADMIN_PW = sessionStorage.getItem('vsws_admin_pw') || '';
+  let MEMBERS = [];
+  let ACTIVE_APP_NO = null;
+
+  async function callApi(action, extra){
+    const payload = Object.assign({ action, password: ADMIN_PW }, extra || {});
+    const res = await fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    return res.json();
+  }
+
+  // ---------- Login ----------
+  document.getElementById('loginBtn').addEventListener('click', doLogin);
+  document.getElementById('pwInput').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+  async function doLogin(){
+    const pw = document.getElementById('pwInput').value;
+    const errEl = document.getElementById('loginError');
+    errEl.textContent = '';
+    if (!pw){ errEl.textContent = 'กรุณากรอกรหัสผ่าน'; return; }
+    if (SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
+      errEl.textContent = 'ยังไม่ได้ตั้งค่า SCRIPT_URL — โปรดดู README.md';
+      return;
+    }
+    ADMIN_PW = pw;
+    try {
+      const result = await callApi('adminLogin');
+      if (result.ok){
+        sessionStorage.setItem('vsws_admin_pw', ADMIN_PW);
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadAll();
+      } else {
+        errEl.textContent = result.error || 'เข้าสู่ระบบไม่สำเร็จ';
+      }
+    } catch (err){
+      errEl.textContent = 'เชื่อมต่อไม่สำเร็จ กรุณาลองใหม่';
+    }
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    sessionStorage.removeItem('vsws_admin_pw');
+    location.reload();
+  });
+
+  // ---------- Load data ----------
+  async function loadAll(){
+    document.getElementById('memberTableBody').innerHTML = '<tr><td colspan="7" class="empty">กำลังโหลดข้อมูล...</td></tr>';
+    const [statsRes, listRes] = await Promise.all([callApi('adminStats'), callApi('adminList')]);
+    if (statsRes.ok) renderStats(statsRes.stats);
+    if (listRes.ok) { MEMBERS = listRes.members; renderTable(); }
+  }
+  document.getElementById('refreshBtn').addEventListener('click', loadAll);
+
+  function renderStats(stats){
+    const cards = [
+      { label: 'สมาชิกทั้งหมด', num: stats.total }
+    ];
+    Object.keys(stats.byStatus).forEach(s => cards.push({ label: s, num: stats.byStatus[s] }));
+    document.getElementById('statsRow').innerHTML = cards.map(c =>
+      `<div class="stat-card"><div class="num">${c.num}</div><div class="label">${c.label}</div></div>`
+    ).join('');
+  }
+
+  function statusBadgeClass(status){
+    if (status === 'อนุมัติแล้ว') return 'approved';
+    if (status === 'รอตรวจสอบ') return 'pending';
+    if (status === 'ปฏิเสธ') return 'rejected';
+    return 'other';
+  }
+  function fmtDate(v){
+    if (!v) return '-';
+    const d = new Date(v);
+    if (isNaN(d)) return String(v);
+    return d.toLocaleDateString('th-TH', { year:'numeric', month:'short', day:'numeric' });
+  }
+
+  function renderTable(){
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value;
+    const rows = MEMBERS.filter(m => {
+      const matchesQ = !q ||
+        (m['ชื่อ-นามสกุล']||'').toLowerCase().includes(q) ||
+        (m['ชื่อองค์กร']||'').toLowerCase().includes(q) ||
+        (m['เลขที่ใบสมัคร']||'').toLowerCase().includes(q);
+      const matchesStatus = !statusFilter || m['สถานะ'] === statusFilter;
+      return matchesQ && matchesStatus;
+    });
+
+    const tbody = document.getElementById('memberTableBody');
+    if (rows.length === 0){
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">ไม่พบข้อมูล</td></tr>';
+      return;
+    }
+    tbody.innerHTML = rows.map(m => `
+      <tr>
+        <td>${m['เลขที่ใบสมัคร'] || '-'}</td>
+        <td>${m['ชื่อ-นามสกุล'] || '-'}</td>
+        <td>${m['ชื่อองค์กร'] || '-'}</td>
+        <td>${m['แพ็กเกจค่าบำรุงรายปี'] || '-'}</td>
+        <td><span class="badge ${statusBadgeClass(m['สถานะ'])}">${m['สถานะ'] || '-'}</span></td>
+        <td>${fmtDate(m['วันหมดอายุสมาชิกภาพ'])}</td>
+        <td class="row-actions">
+          <button class="btn small" onclick="openDetail('${m['เลขที่ใบสมัคร']}')">ดู</button>
+          <button class="btn small" onclick="openApprove('${m['เลขที่ใบสมัคร']}')">อนุมัติ</button>
+          <button class="btn small" onclick="openReject('${m['เลขที่ใบสมัคร']}')">ปฏิเสธ</button>
+          <button class="btn small" onclick="openRenew('${m['เลขที่ใบสมัคร']}')">ต่ออายุ</button>
+          <button class="btn small" onclick="openEdit('${m['เลขที่ใบสมัคร']}')">แก้ไข</button>
+          <button class="btn small danger" onclick="doDelete('${m['เลขที่ใบสมัคร']}')">ลบ</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+  document.getElementById('searchInput').addEventListener('input', renderTable);
+  document.getElementById('statusFilter').addEventListener('change', renderTable);
+
+  function findMember(appNo){ return MEMBERS.find(m => m['เลขที่ใบสมัคร'] === appNo); }
+  function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+  function openModal(id){ document.getElementById(id).classList.add('show'); }
+
+  // ---------- Detail ----------
+  function openDetail(appNo){
+    const m = findMember(appNo);
+    if (!m) return;
+    ACTIVE_APP_NO = appNo;
+    const fileFields = ['ไฟล์: หนังสือรับรองการจัดตั้งองค์กร','ไฟล์: สำเนาหนังสือรับรองการจัดตั้งองค์กร','ไฟล์: สำเนาทะเบียนบ้านที่ตั้งองค์กร','ไฟล์: หลักฐานการโอนเงิน','ไฟล์: ลายมือชื่อผู้ยื่นคำขอ'];
+    const skip = fileFields.concat(['rowNumber']);
+    let html = '';
+    Object.keys(m).forEach(k => {
+      if (skip.includes(k) || !m[k]) return;
+      html += `<dt>${k}</dt><dd>${m[k]}</dd>`;
+    });
+    html += '<dt>เอกสารแนบ</dt><dd>';
+    fileFields.forEach(f => {
+      if (m[f]) html += `<div><a href="${m[f]}" target="_blank">${f.replace('ไฟล์: ','')}</a></div>`;
+    });
+    html += '</dd>';
+    document.getElementById('detailTitle').textContent = 'รายละเอียด: ' + (m['ชื่อ-นามสกุล'] || appNo);
+    document.getElementById('detailBody').innerHTML = html;
+    openModal('detailModal');
+  }
+
+  // ---------- Approve ----------
+  function openApprove(appNo){
+    ACTIVE_APP_NO = appNo;
+    document.getElementById('approveMsg').textContent = '';
+    const m = findMember(appNo);
+    if (m && m['แพ็กเกจค่าบำรุงรายปี'] === '5ปี') document.getElementById('approveYears').value = '5';
+    openModal('approveModal');
+  }
+  document.getElementById('approveConfirm').addEventListener('click', async function(){
+    const years = document.getElementById('approveYears').value;
+    const note = document.getElementById('approveNote').value;
+    const msg = document.getElementById('approveMsg');
+    msg.textContent = 'กำลังบันทึก...'; msg.className = 'modal-msg';
+    const result = await callApi('adminApprove', { applicationNo: ACTIVE_APP_NO, years, note });
+    if (result.ok){ closeModal('approveModal'); loadAll(); }
+    else { msg.textContent = result.error || 'เกิดข้อผิดพลาด'; msg.className = 'modal-msg error'; }
+  });
+
+  // ---------- Reject ----------
+  function openReject(appNo){
+    ACTIVE_APP_NO = appNo;
+    document.getElementById('rejectReason').value = '';
+    document.getElementById('rejectMsg').textContent = '';
+    openModal('rejectModal');
+  }
+  document.getElementById('rejectConfirm').addEventListener('click', async function(){
+    const reason = document.getElementById('rejectReason').value;
+    const msg = document.getElementById('rejectMsg');
+    msg.textContent = 'กำลังบันทึก...'; msg.className = 'modal-msg';
+    const result = await callApi('adminReject', { applicationNo: ACTIVE_APP_NO, reason });
+    if (result.ok){ closeModal('rejectModal'); loadAll(); }
+    else { msg.textContent = result.error || 'เกิดข้อผิดพลาด'; msg.className = 'modal-msg error'; }
+  });
+
+  // ---------- Renew ----------
+  function openRenew(appNo){
+    ACTIVE_APP_NO = appNo;
+    document.getElementById('renewNote').value = '';
+    document.getElementById('renewMsg').textContent = '';
+    openModal('renewModal');
+  }
+  document.getElementById('renewConfirm').addEventListener('click', async function(){
+    const years = document.getElementById('renewYears').value;
+    const note = document.getElementById('renewNote').value;
+    const msg = document.getElementById('renewMsg');
+    msg.textContent = 'กำลังบันทึก...'; msg.className = 'modal-msg';
+    const result = await callApi('adminRenew', { applicationNo: ACTIVE_APP_NO, years, note });
+    if (result.ok){ closeModal('renewModal'); loadAll(); }
+    else { msg.textContent = result.error || 'เกิดข้อผิดพลาด'; msg.className = 'modal-msg error'; }
+  });
+
+  // ---------- Edit ----------
+  function openEdit(appNo){
+    const m = findMember(appNo);
+    if (!m) return;
+    ACTIVE_APP_NO = appNo;
+    document.getElementById('editFullName').value = m['ชื่อ-นามสกุล'] || '';
+    document.getElementById('editOrgName').value = m['ชื่อองค์กร'] || '';
+    document.getElementById('editMobile').value = m['เบอร์มือถือ'] || '';
+    document.getElementById('editEmail').value = m['E-mail'] || '';
+    document.getElementById('editNote').value = m['หมายเหตุเจ้าหน้าที่'] || '';
+    document.getElementById('editMsg').textContent = '';
+    openModal('editModal');
+  }
+  document.getElementById('editConfirm').addEventListener('click', async function(){
+    const fields = {
+      'ชื่อ-นามสกุล': document.getElementById('editFullName').value,
+      'ชื่อองค์กร': document.getElementById('editOrgName').value,
+      'เบอร์มือถือ': document.getElementById('editMobile').value,
+      'E-mail': document.getElementById('editEmail').value,
+      'หมายเหตุเจ้าหน้าที่': document.getElementById('editNote').value
+    };
+    const msg = document.getElementById('editMsg');
+    msg.textContent = 'กำลังบันทึก...'; msg.className = 'modal-msg';
+    const result = await callApi('adminUpdateFields', { applicationNo: ACTIVE_APP_NO, fields });
+    if (result.ok){ closeModal('editModal'); loadAll(); }
+    else { msg.textContent = result.error || 'เกิดข้อผิดพลาด'; msg.className = 'modal-msg error'; }
+  });
+
+  // ---------- Delete ----------
+  async function doDelete(appNo){
+    if (!confirm('ยืนยันลบใบสมัคร ' + appNo + ' ออกจากระบบ? การลบไม่สามารถย้อนกลับได้')) return;
+    const result = await callApi('adminDelete', { applicationNo: appNo });
+    if (result.ok) loadAll();
+    else alert(result.error || 'ลบไม่สำเร็จ');
+  }
+
+  // ---------- Add manual member ----------
+  document.getElementById('addManualBtn').addEventListener('click', function(){
+    ['mFullName','mOrgName','mIdNumber','mMobile','mAppNo'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('mApprovedDate').value = new Date().toISOString().slice(0,10);
+    document.getElementById('manualMsg').textContent = '';
+    openModal('manualModal');
+  });
+  document.getElementById('manualConfirm').addEventListener('click', async function(){
+    const data = {
+      fullName: document.getElementById('mFullName').value,
+      orgName: document.getElementById('mOrgName').value,
+      idNumber: document.getElementById('mIdNumber').value,
+      mobile: document.getElementById('mMobile').value,
+      orgType: document.getElementById('mOrgType').value,
+      duesPackage: document.getElementById('mDuesPackage').value,
+      approvedDate: document.getElementById('mApprovedDate').value,
+      applicationNo: document.getElementById('mAppNo').value
+    };
+    const msg = document.getElementById('manualMsg');
+    msg.textContent = 'กำลังบันทึก...'; msg.className = 'modal-msg';
+    const result = await callApi('adminAddManual', data);
+    if (result.ok){ closeModal('manualModal'); loadAll(); }
+    else { msg.textContent = (result.error || 'เกิดข้อผิดพลาด') + (result.details ? ' (' + result.details.join(', ') + ')' : ''); msg.className = 'modal-msg error'; }
+  });
+
+  // ---------- Auto-login if session has password ----------
+  if (ADMIN_PW){
+    callApi('adminLogin').then(result => {
+      if (result.ok){
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        loadAll();
+      } else {
+        sessionStorage.removeItem('vsws_admin_pw');
+      }
+    });
+  }
+</script>
+</body>
+</html>

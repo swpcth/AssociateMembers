@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ใบสมัครสมาชิกวิสามัญ | สภาวิชาชีพสังคมสงเคราะห์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF7EE;
+    --paper-line:#E4DBC7;
+    --ink:#1F2A3C;
+    --ink-soft:#5B6472;
+    --navy:#1B3A6B;
+    --red:#C13B3F;
+    --teal:#1D7A8C;
+    --gold:#B8863B;
+    --card-shadow: 0 1px 2px rgba(31,42,60,.06), 0 8px 24px rgba(31,42,60,.06);
+    --radius: 4px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 500px at 15% -10%, rgba(29,122,140,.06), transparent 60%),
+      var(--paper);
+    color:var(--ink);
+    font-family:'Sarabun',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    padding-bottom:80px;
+  }
+  a{color:var(--teal);}
+
+  .flag-ribbon{height:6px;width:100%;display:flex;}
+  .flag-ribbon span{flex:1;}
+  .flag-ribbon .r1{background:var(--red);}
+  .flag-ribbon .r2{background:#fff;border-top:1px solid var(--paper-line);border-bottom:1px solid var(--paper-line);}
+  .flag-ribbon .r3{background:var(--navy);}
+
+  header.site{
+    max-width:920px;margin:0 auto;padding:38px 24px 20px;
+    display:flex;align-items:flex-start;justify-content:space-between;gap:20px;
+  }
+  .brand{display:flex;gap:16px;align-items:center;}
+  .brand .badge{
+    width:58px;height:58px;border-radius:50%;
+    background:#fff;
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+    box-shadow: 0 0 0 1px var(--paper-line);
+    flex:none;
+  }
+  .brand .badge img{width:100%;height:100%;object-fit:cover;}
+
+  .header-actions{display:flex;flex-direction:column;align-items:flex-end;gap:8px;}
+  .printBtn{
+    display:flex;align-items:center;gap:6px;
+    background:#fff;border:1.5px solid var(--navy);color:var(--navy);
+    border-radius:3px;padding:7px 14px;font-family:'Sarabun',sans-serif;font-weight:600;font-size:.85rem;
+    cursor:pointer;
+  }
+  .printBtn:hover{background:var(--navy);color:#fff;}
+
+  @media print{
+    body{background:#fff;padding-bottom:0;}
+    .no-print{display:none !important;}
+    .card{box-shadow:none;border:1px solid #999;break-inside:avoid;}
+    .flag-ribbon{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    input, select, textarea{border:1px solid #bbb !important;background:#fff !important;}
+    .file-drop{border-style:solid;}
+    a{color:#000;text-decoration:none;}
+  }
+  .brand h1{
+    font-family:'Sarabun',sans-serif;
+    font-size:1.5rem;font-weight:700;color:var(--navy);
+    margin:0 0 2px;
+  }
+  .brand p{margin:0;color:var(--ink-soft);font-size:.92rem;}
+  .formcode{
+    font-family:'Sarabun',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:.06em;
+    color:var(--navy);border:1.5px solid var(--navy);border-radius:3px;
+    padding:6px 10px;white-space:nowrap;transform:rotate(2deg);
+  }
+
+  main{max-width:920px;margin:0 auto;padding:0 24px;}
+
+  .intro{
+    font-family:'Sarabun',sans-serif;
+    color:var(--ink);
+    border-left:3px solid var(--gold);
+    padding:2px 0 2px 16px;
+    margin:10px 0 32px;
+    font-size:1.02rem;
+  }
+
+  .card{
+    background:#fff;
+    border:1px solid var(--paper-line);
+    border-radius:var(--radius);
+    box-shadow:var(--card-shadow);
+    margin-bottom:22px;
+    overflow:hidden;
+  }
+  .card .head{
+    display:flex;align-items:baseline;gap:12px;
+    padding:18px 24px 14px;
+    border-bottom:1px dashed var(--paper-line);
+  }
+  .card .head .no{
+    font-family:'Sarabun',sans-serif;font-weight:700;color:#fff;
+    background:var(--navy);
+    width:28px;height:28px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.85rem;flex:none;
+  }
+  .card .head h2{
+    font-family:'Sarabun',sans-serif;font-size:1.08rem;font-weight:600;color:var(--navy);margin:0;
+  }
+  .card .body{padding:20px 24px 24px;}
+
+  .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px 16px;}
+  .g-2{grid-column:span 2;} .g-3{grid-column:span 3;} .g-4{grid-column:span 4;} .g-6{grid-column:span 6;}
+  .g-8{grid-column:span 8;} .g-12{grid-column:span 12;}
+  @media (max-width:640px){ .grid [class^="g-"]{grid-column:span 12;} }
+
+  label{
+    display:block;font-size:.83rem;color:var(--ink-soft);margin-bottom:5px;font-weight:500;
+  }
+  label .req{color:var(--red);margin-left:2px;}
+
+  input[type=text], input[type=tel], input[type=email], input[type=number], select, textarea{
+    width:100%;
+    border:1px solid #CFC6AF;
+    background:#FEFDFA;
+    border-radius:3px;
+    padding:9px 10px;
+    font-family:'Sarabun',sans-serif;
+    font-size:.95rem;
+    color:var(--ink);
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input:focus, select:focus, textarea:focus{
+    outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(29,122,140,.14);
+  }
+  input:disabled, select:disabled{background:#F1EEE4;color:var(--ink-soft);}
+
+  .date-row{display:flex;gap:8px;}
+  .date-row select{flex:1;}
+
+  .radio-row, .check-row{display:flex;gap:22px;flex-wrap:wrap;margin-top:2px;}
+  .radio-row label, .check-row label{
+    display:flex;align-items:flex-start;gap:8px;font-size:.92rem;color:var(--ink);
+    font-weight:400;margin-bottom:0;cursor:pointer;
+  }
+  .check-row.stacked{flex-direction:column;gap:10px;}
+  input[type=radio], input[type=checkbox]{
+    accent-color:var(--navy);width:17px;height:17px;margin-top:2px;flex:none;
+  }
+
+  .hint{font-size:.8rem;color:var(--ink-soft);margin-top:6px;}
+
+  .file-drop{
+    border:1.5px dashed #CFC6AF;border-radius:4px;padding:14px;background:#FEFDFA;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  }
+  .file-drop input[type=file]{font-size:.85rem;}
+  .file-drop .fname{font-size:.82rem;color:var(--teal);font-weight:600;}
+
+  .fee-table{width:100%;border-collapse:collapse;margin-bottom:10px;}
+  .fee-table td{padding:10px 4px;border-bottom:1px solid var(--paper-line);font-size:.93rem;}
+  .fee-table td:last-child{text-align:right;font-weight:600;white-space:nowrap;}
+  .fee-total{
+    display:flex;justify-content:space-between;align-items:center;
+    background:#F4F0E4;border-radius:3px;padding:12px 14px;margin-top:8px;
+    font-family:'Sarabun',sans-serif;
+  }
+  .fee-total .amount{font-size:1.25rem;font-weight:700;color:var(--red);}
+  .bank-box{
+    margin-top:14px;border:1px solid var(--paper-line);border-radius:3px;
+    padding:12px 14px;background:#FCFAF3;font-size:.9rem;
+  }
+  .bank-box b{color:var(--navy);}
+
+  .consent{
+    display:flex;gap:10px;align-items:flex-start;background:#F4F0E4;
+    border-radius:3px;padding:14px;margin-top:6px;font-size:.9rem;
+  }
+
+  .submit-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    margin-top:8px;
+  }
+  button.submit{
+    background:var(--navy);color:#fff;border:none;border-radius:3px;
+    font-family:'Sarabun',sans-serif;font-weight:700;font-size:1rem;
+    padding:14px 28px;cursor:pointer;letter-spacing:.02em;
+    transition:transform .12s, background .15s;
+  }
+  button.submit:hover{background:#142d54;}
+  button.submit:active{transform:scale(.98);}
+  button.submit:disabled{background:#9aa4b3;cursor:not-allowed;}
+
+  .status-msg{font-size:.88rem;}
+  .status-msg.error{color:var(--red);}
+  .status-msg.ok{color:#1c7a3d;}
+
+  /* signature pad */
+  .sig-wrap{
+    border:1.5px dashed #CFC6AF;border-radius:4px;background:#FEFDFA;
+    padding:10px;
+  }
+  .sig-wrap canvas{
+    width:100%;height:160px;background:#fff;border:1px solid var(--paper-line);
+    border-radius:3px;touch-action:none;cursor:crosshair;
+  }
+  .sig-actions{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+  .sig-actions button{
+    background:#fff;border:1px solid var(--paper-line);border-radius:3px;
+    padding:6px 12px;font-family:'Sarabun',sans-serif;font-size:.82rem;cursor:pointer;color:var(--ink-soft);
+  }
+  .sig-actions button:hover{border-color:var(--teal);color:var(--teal);}
+
+  .overlay{
+    position:fixed;inset:0;background:rgba(23,29,42,.55);
+    display:none;align-items:center;justify-content:center;z-index:50;padding:20px;
+  }
+  .overlay.show{display:flex;}
+  .success-card{
+    background:#FBF7EE;border-radius:6px;max-width:420px;width:100%;
+    padding:36px 28px 30px;text-align:center;position:relative;
+    box-shadow:0 24px 60px rgba(0,0,0,.3);
+  }
+  .stamp{
+    width:104px;height:104px;margin:0 auto 18px;border-radius:50%;
+    border:3px solid var(--red);color:var(--red);
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    font-family:'Sarabun',sans-serif;font-weight:700;
+    transform:scale(0) rotate(-25deg);opacity:0;
+    animation:stampIn .5s cubic-bezier(.2,1.6,.4,1) .1s forwards;
+  }
+  @keyframes stampIn{ to{ transform:scale(1) rotate(-12deg); opacity:1; } }
+  .stamp span:first-child{font-size:1.6rem;line-height:1;}
+  .stamp span:last-child{font-size:.62rem;letter-spacing:.05em;margin-top:2px;}
+  .success-card h3{font-family:'Sarabun',sans-serif;font-weight:700;color:var(--navy);margin:0 0 8px;}
+  .success-card p{color:var(--ink-soft);font-size:.92rem;margin:0 0 20px;}
+  .success-card .appno{font-weight:700;color:var(--red);}
+  .success-card button{
+    background:var(--navy);color:#fff;border:none;border-radius:3px;
+    padding:10px 22px;font-family:'Sarabun',sans-serif;font-weight:600;cursor:pointer;
+  }
+
+  footer.site{max-width:920px;margin:30px auto 0;padding:0 24px;color:var(--ink-soft);font-size:.82rem;}
+</style>
+</head>
+<body>
+
+<div class="flag-ribbon"><span class="r1"></span><span class="r2"></span><span class="r3"></span></div>
+
+<header class="site">
+  <div class="brand">
+    <div class="badge">
+      <img src="https://img1.pic.in.th/images/11zon_cropped5df24c47ef9f067c.png" alt="ตราสภาวิชาชีพสังคมสงเคราะห์">
+    </div>
+    <div>
+      <h1>สภาวิชาชีพสังคมสงเคราะห์</h1>
+      <p>Social Work Professions Council · ใบสมัครสมาชิกวิสามัญ (สำหรับองค์กร)</p>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="formcode">สวชส.10</div>
+    <button type="button" class="printBtn no-print" id="printBtn">🖨️ พิมพ์ใบสมัคร</button>
+  </div>
+</header>
+
+<main>
+  <p class="intro">
+    แบบคำขอสมัครเป็นสมาชิกวิสามัญ สำหรับองค์กรภาครัฐหรือภาคเอกชนที่มีวัตถุประสงค์ด้านสังคมสงเคราะห์
+    ตามข้อบังคับสภาวิชาชีพสังคมสงเคราะห์ พ.ศ. 2556 กรุณากรอกข้อมูลให้ครบถ้วนและแนบเอกสารประกอบ
+  </p>
+
+  <form id="applyForm" novalidate>
+
+    <!-- 1. เขียนที่ / วันที่ -->
+    <section class="card">
+      <div class="head"><div class="no">1</div><h2>สถานที่และวันที่เขียนคำขอ</h2></div>
+      <div class="body grid">
+        <div class="g-6">
+          <label>เขียนที่</label>
+          <input type="text" name="writtenAt" placeholder="เช่น กรุงเทพมหานคร">
+        </div>
+        <div class="g-6">
+          <label>วันที่เขียนคำขอ</label>
+          <div class="date-row">
+            <select id="writtenDay"></select>
+            <select id="writtenMonth"></select>
+            <select id="writtenYear"></select>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. ข้อมูลผู้สมัคร -->
+    <section class="card">
+      <div class="head"><div class="no">2</div><h2>ข้อมูลผู้ยื่นคำขอ</h2></div>
+      <div class="body grid">
+        <div class="g-2">
+          <label>คำนำหน้า<span class="req">*</span></label>
+          <select name="titlePrefix" required>
+            <option value="">เลือก</option>
+            <option>นาย</option><option>นาง</option><option>นางสาว</option><option>อื่นๆ</option>
+          </select>
+        </div>
+        <div class="g-6">
+          <label>ชื่อ-นามสกุล<span class="req">*</span></label>
+          <input type="text" name="fullName" required>
+        </div>
+        <div class="g-4">
+          <label>เลขบัตรประจำตัวประชาชน/เจ้าหน้าที่ของรัฐ/อื่นๆ<span class="req">*</span></label>
+          <input type="text" name="idNumber" required>
+        </div>
+        <div class="g-6">
+          <label>เกิดวันที่/เดือน/พ.ศ.</label>
+          <div class="date-row">
+            <select id="birthDay"></select>
+            <select id="birthMonth"></select>
+            <select id="birthYear"></select>
+          </div>
+        </div>
+        <div class="g-3">
+          <label>เชื้อชาติ</label>
+          <input type="text" name="ethnicity" value="ไทย">
+        </div>
+        <div class="g-3">
+          <label>สัญชาติ</label>
+          <input type="text" name="nationality" value="ไทย">
+        </div>
+        <div class="g-2">
+          <label>ศาสนา</label>
+          <input type="text" name="religion">
+        </div>
+        <div class="g-6">
+          <label>สถานภาพการสมรส</label>
+          <div class="radio-row">
+            <label><input type="radio" name="maritalStatus" value="โสด">โสด</label>
+            <label><input type="radio" name="maritalStatus" value="สมรส">สมรส</label>
+            <label><input type="radio" name="maritalStatus" value="หม้าย/หย่าร้าง">หม้าย/หย่าร้าง</label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. องค์กร -->
+    <section class="card">
+      <div class="head"><div class="no">3</div><h2>ตำแหน่งและข้อมูลองค์กร</h2></div>
+      <div class="body grid">
+        <div class="g-6">
+          <label>ตำแหน่งในองค์กร</label>
+          <input type="text" name="position">
+        </div>
+        <div class="g-6">
+          <label>ชื่อองค์กร<span class="req">*</span></label>
+          <input type="text" name="orgName" required>
+        </div>
+
+        <div class="g-2"><label>เลขที่</label><input type="text" name="orgAddrNo"></div>
+        <div class="g-2"><label>หมู่ที่</label><input type="text" name="orgMoo"></div>
+        <div class="g-4"><label>ซอย</label><input type="text" name="orgSoi"></div>
+        <div class="g-4"><label>ถนน</label><input type="text" name="orgRoad"></div>
+
+        <div class="g-4">
+          <label>จังหวัด<span class="req">*</span></label>
+          <select id="orgProvince" data-group="org" required></select>
+        </div>
+        <div class="g-4">
+          <label>อำเภอ/เขต<span class="req">*</span></label>
+          <select id="orgDistrict" data-group="org" required disabled><option value="">เลือกจังหวัดก่อน</option></select>
+        </div>
+        <div class="g-4">
+          <label>ตำบล/แขวง<span class="req">*</span></label>
+          <select id="orgSubdistrict" data-group="org" required disabled><option value="">เลือกอำเภอก่อน</option></select>
+        </div>
+        <div class="g-3"><label>รหัสไปรษณีย์</label><input type="text" id="orgZip" readonly></div>
+
+        <div class="g-4"><label>เบอร์มือถือ<span class="req">*</span></label><input type="tel" name="mobile" required></div>
+        <div class="g-4"><label>เบอร์โทรศัพท์</label><input type="tel" name="phone"></div>
+        <div class="g-4"><label>E-mail</label><input type="email" name="email"></div>
+      </div>
+    </section>
+
+    <!-- 4. ประเภทและเป้าหมาย -->
+    <section class="card">
+      <div class="head"><div class="no">4</div><h2>ประเภทองค์กร และเป้าหมาย/กิจกรรม</h2></div>
+      <div class="body">
+        <label>ประเภทขององค์กร<span class="req">*</span></label>
+        <div class="radio-row" style="margin-bottom:18px;">
+          <label><input type="radio" name="orgType" value="องค์กรภาครัฐ" required>องค์กรภาครัฐ</label>
+          <label><input type="radio" name="orgType" value="องค์กรภาคเอกชน">องค์กรภาคเอกชน</label>
+        </div>
+
+        <label>เป้าหมายและกิจกรรมขององค์กร (เลือกได้มากกว่า 1 ข้อ)</label>
+        <div class="check-row stacked">
+          <label><input type="checkbox" name="orgGoals" value="ป้องกันแก้ไขปัญหาให้แก่บุคคล ครอบครัว กลุ่มคนหรือชุมชน ให้กระทำหน้าที่ทางสังคมและดำรงชีวิตได้อย่างปกติสุข">
+            ป้องกันแก้ไขปัญหาให้แก่บุคคล ครอบครัว กลุ่มคนหรือชุมชน ให้กระทำหน้าที่ทางสังคมและดำรงชีวิตได้อย่างปกติสุข</label>
+          <label><input type="checkbox" name="orgGoals" value="ให้ความช่วยเหลือทางสังคมหรือบริการทางสังคม">
+            ให้ความช่วยเหลือทางสังคมหรือบริการทางสังคม</label>
+          <label><input type="checkbox" name="orgGoals" value="คุ้มครองสิทธิ ให้คำปรึกษาแนะนำ ส่งเสริม และสนับสนุนเด็ก เยาวชน สตรี ผู้สูงอายุ คนพิการ และผู้ด้อยโอกาสในสังคม">
+            คุ้มครองสิทธิ ให้คำปรึกษาแนะนำ ส่งเสริม และสนับสนุนเด็ก เยาวชน สตรี ผู้สูงอายุ คนพิการ และผู้ด้อยโอกาสในสังคม</label>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. ผู้บริหาร + เอกสารแนบ -->
+    <section class="card">
+      <div class="head"><div class="no">5</div><h2>ผู้บริหารองค์กร และเอกสารแนบ</h2></div>
+      <div class="body grid">
+        <div class="g-12">
+          <label>ข้าพเจ้าในฐานะผู้บริหารขององค์กร (ระบุตำแหน่ง)</label>
+          <input type="text" name="executivePosition" placeholder="เช่น ผู้อำนวยการมูลนิธิ...">
+        </div>
+
+        <div class="g-4">
+          <label>1. หนังสือรับรองการจัดตั้งองค์กร (ต้นฉบับ)</label>
+          <div class="file-drop"><input type="file" data-key="orgCertOriginal"><span class="fname"></span></div>
+        </div>
+        <div class="g-4">
+          <label>2. สำเนาหนังสือรับรองการจัดตั้งองค์กร</label>
+          <div class="file-drop"><input type="file" data-key="orgCertCopy"><span class="fname"></span></div>
+        </div>
+        <div class="g-4">
+          <label>3. สำเนาทะเบียนบ้านที่ตั้งองค์กร</label>
+          <div class="file-drop"><input type="file" data-key="houseRegCopy"><span class="fname"></span></div>
+        </div>
+        <div class="g-12"><p class="hint">รองรับไฟล์ PDF/JPG/PNG ขนาดไม่เกิน 5 MB ต่อไฟล์</p></div>
+      </div>
+    </section>
+
+    <!-- 6. ค่าธรรมเนียม -->
+    <section class="card">
+      <div class="head"><div class="no">6</div><h2>ค่าขึ้นทะเบียนและค่าบำรุง</h2></div>
+      <div class="body">
+        <table class="fee-table">
+          <tr><td>(1) ค่าขึ้นทะเบียนสมาชิกแรกเข้า</td><td>100 บาท</td></tr>
+          <tr><td>(2) ค่าบำรุงรายปี (เลือกอย่างใดอย่างหนึ่ง)</td><td></td></tr>
+          <tr><td>(3) ค่าจัดส่งหนังสือรับรองการเป็นสมาชิก</td><td>20 บาท</td></tr>
+        </table>
+
+        <div class="radio-row" style="margin:-4px 0 4px;">
+          <label><input type="radio" name="duesPackage" value="1ปี" data-fee="200" required>ค่าบำรุงรายปี 1 ปี — 200 บาท</label>
+          <label><input type="radio" name="duesPackage" value="5ปี" data-fee="1000">ค่าบำรุงรายปี 5 ปี — 1,000 บาท</label>
+        </div>
+
+        <div class="fee-total">
+          <span>ยอดชำระรวมทั้งสิ้น</span>
+          <span class="amount" id="totalFee">— บาท</span>
+        </div>
+
+        <div class="bank-box">
+          โอนเงินเข้าบัญชี <b>021-0-15582-5</b> ธนาคารกรุงไทย ชื่อบัญชี <b>สภาวิชาชีพสังคมสงเคราะห์</b><br>
+          ชำระได้ทุกช่องทาง และแนบหลักฐานการโอนเงินด้านล่าง
+        </div>
+
+        <div class="grid" style="margin-top:16px;">
+          <div class="g-6">
+            <label>4. หลักฐานการโอนเงิน (สลิป)</label>
+            <div class="file-drop"><input type="file" data-key="paymentSlip"><span class="fname"></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. ที่อยู่จัดส่ง -->
+    <section class="card">
+      <div class="head"><div class="no">7</div><h2>ที่อยู่สำหรับจัดส่งเอกสาร</h2></div>
+      <div class="body grid">
+        <div class="g-12">
+          <label style="display:flex;align-items:center;gap:8px;font-weight:400;cursor:pointer;margin-bottom:6px;">
+            <input type="checkbox" id="sameAsOrg" checked> ใช้ที่อยู่เดียวกับที่อยู่องค์กรด้านบน
+          </label>
+        </div>
+        <div class="g-2"><label>เลขที่</label><input type="text" id="mailAddrNo" disabled></div>
+        <div class="g-2"><label>หมู่ที่</label><input type="text" id="mailMoo" disabled></div>
+        <div class="g-4"><label>ซอย</label><input type="text" id="mailSoi" disabled></div>
+        <div class="g-4"><label>ถนน</label><input type="text" id="mailRoad" disabled></div>
+
+        <div class="g-4">
+          <label>จังหวัด</label>
+          <select id="mailProvince" data-group="mail" disabled></select>
+        </div>
+        <div class="g-4">
+          <label>อำเภอ/เขต</label>
+          <select id="mailDistrict" data-group="mail" disabled><option value="">เลือกจังหวัดก่อน</option></select>
+        </div>
+        <div class="g-4">
+          <label>ตำบล/แขวง</label>
+          <select id="mailSubdistrict" data-group="mail" disabled><option value="">เลือกอำเภอก่อน</option></select>
+        </div>
+        <div class="g-3"><label>รหัสไปรษณีย์</label><input type="text" id="mailZip" readonly></div>
+      </div>
+    </section>
+
+    <!-- 8. ลงนาม -->
+    <section class="card">
+      <div class="head"><div class="no">8</div><h2>ลงนามและยืนยันการสมัคร</h2></div>
+      <div class="body">
+        <div class="grid" style="margin-bottom:16px;">
+          <div class="g-6">
+            <label>ชื่อผู้ยื่นคำขอ (พิมพ์ชื่อ)<span class="req">*</span></label>
+            <input type="text" name="applicantSignature" required>
+          </div>
+        </div>
+
+        <label>ลายมือชื่อ (วาดด้วยเมาส์หรือนิ้วบนหน้าจอสัมผัส)</label>
+        <div class="sig-wrap">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-actions no-print">
+            <span class="hint" style="margin:0;">ลงลายมือชื่อในกรอบด้านบน</span>
+            <button type="button" id="sigClear">ล้างลายเซ็น</button>
+          </div>
+        </div>
+
+        <div class="consent">
+          <input type="checkbox" id="consent" required style="margin-top:3px;">
+          <label for="consent" style="font-weight:400;margin:0;">
+            ข้าพเจ้าขอรับรองว่าข้อมูลข้างต้นเป็นความจริงทุกประการ และยินยอมให้สภาวิชาชีพสังคมสงเคราะห์
+            จัดเก็บและใช้ข้อมูลเพื่อการพิจารณาสมาชิกภาพตามพระราชบัญญัติวิชาชีพสังคมสงเคราะห์ พ.ศ. 2556
+          </label>
+        </div>
+
+        <div class="submit-bar no-print">
+          <button type="submit" class="submit" id="submitBtn">ส่งใบสมัคร</button>
+          <span class="status-msg" id="statusMsg"></span>
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <footer class="site">
+    สำนักงานสภาวิชาชีพสังคมสงเคราะห์ ตึกอาทิตย์ทิพอาภา ชั้น 2 บริเวณสถานสงเคราะห์เด็กหญิงบ้านราชวิถี
+    เลขที่ 255 ถนนราชวิถี แขวงทุ่งพญาไท เขตราชเทวี กรุงเทพมหานคร 10400 ·
+    โทร 02-050-9427 · มือถือ 098-380-1351 · thaisocialworkcouncil@gmail.com
+  </footer>
+</main>
+
+<div class="overlay no-print" id="overlay">
+  <div class="success-card">
+    <div class="stamp"><span>✓</span><span>รับเรื่องแล้ว</span></div>
+    <h3>ส่งใบสมัครสำเร็จ</h3>
+    <p>เลขที่ใบสมัครของท่านคือ <span class="appno" id="appNoText">-</span><br>
+       เจ้าหน้าที่จะตรวจสอบและติดต่อกลับภายใน 15 วันทำการ</p>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button onclick="window.print()" style="background:#fff;color:var(--navy);border:1.5px solid var(--navy);">พิมพ์ใบสมัคร</button>
+      <button onclick="location.reload()">ปิดหน้าต่าง</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ⚠️ แก้ไข URL นี้ให้เป็น URL ของ Apps Script Web App ที่ deploy แล้ว (ลงท้ายด้วย /exec)
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxDpDHZsr9n22zwtLwZ33DYSyjENsb-ZrV2l_IYvnPqRh3DmWwGcW1A8ah2vW2OO_vN/exec';
+
+  const PROVINCE_URL = 'https://raw.githubusercontent.com/kongvut/thai-province-data/master/api/latest/province.json';
+  const DISTRICT_URL = 'https://raw.githubusercontent.com/kongvut/thai-province-data/master/api/latest/district.json';
+  const SUBDISTRICT_URL = 'https://raw.githubusercontent.com/kongvut/thai-province-data/master/api/latest/sub_district.json';
+
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+  const form = document.getElementById('applyForm');
+  const statusMsg = document.getElementById('statusMsg');
+  const submitBtn = document.getElementById('submitBtn');
+  const totalFeeEl = document.getElementById('totalFee');
+
+  // ---------------------------------------------------------------
+  // วันที่แบบไทย (วัน / เดือน / พ.ศ.)
+  // ---------------------------------------------------------------
+  const THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+
+  function fillSelect(el, items, placeholder){
+    el.innerHTML = '<option value="">' + placeholder + '</option>' +
+      items.map(it => `<option value="${it.value}">${it.label}</option>`).join('');
+  }
+
+  function setupDatePicker(prefix, opts){
+    opts = opts || {};
+    const daySel = document.getElementById(prefix + 'Day');
+    const monthSel = document.getElementById(prefix + 'Month');
+    const yearSel = document.getElementById(prefix + 'Year');
+
+    fillSelect(daySel, Array.from({length:31}, (_,i)=>({value:i+1,label:i+1})), 'วัน');
+    fillSelect(monthSel, THAI_MONTHS.map((m,i)=>({value:i+1,label:m})), 'เดือน');
+
+    const nowBE = new Date().getFullYear() + 543;
+    const startBE = opts.birth ? nowBE - 100 : nowBE - 5;
+    const endBE = opts.birth ? nowBE : nowBE + 2;
+    const years = [];
+    for (let y = endBE; y >= startBE; y--) years.push({value:y, label:y});
+    fillSelect(yearSel, years, 'พ.ศ.');
+
+    if (opts.defaultToday){
+      const today = new Date();
+      daySel.value = today.getDate();
+      monthSel.value = today.getMonth() + 1;
+      yearSel.value = nowBE;
+    }
+  }
+  setupDatePicker('written', { defaultToday: true });
+  setupDatePicker('birth', { birth: true });
+
+  function readDate(prefix){
+    const d = document.getElementById(prefix + 'Day').value;
+    const m = document.getElementById(prefix + 'Month').value;
+    const y = document.getElementById(prefix + 'Year').value;
+    if (!d || !m || !y) return '';
+    return `${d} ${THAI_MONTHS[m-1]} ${y}`;
+  }
+
+  // ---------------------------------------------------------------
+  // ที่อยู่: จังหวัด / อำเภอ / ตำบล (cascading, จาก thai-province-data)
+  // ---------------------------------------------------------------
+  let PROVINCES = [], DISTRICTS = [], SUBDISTRICTS = [];
+
+  async function loadAddressData(){
+    try {
+      const [p, d, s] = await Promise.all([
+        fetch(PROVINCE_URL).then(r => r.json()),
+        fetch(DISTRICT_URL).then(r => r.json()),
+        fetch(SUBDISTRICT_URL).then(r => r.json())
+      ]);
+      PROVINCES = p; DISTRICTS = d; SUBDISTRICTS = s;
+
+      const provinceItems = PROVINCES.map(pr => ({ value: pr.id, label: pr.name_th }))
+        .sort((a,b) => a.label.localeCompare(b.label, 'th'));
+
+      ['org','mail'].forEach(group => {
+        const sel = document.getElementById(group + 'Province');
+        fillSelect(sel, provinceItems, 'เลือกจังหวัด');
+        sel.disabled = false;
+      });
+    } catch (err){
+      console.error('โหลดข้อมูลจังหวัด/อำเภอ/ตำบลไม่สำเร็จ', err);
+    }
+  }
+  loadAddressData();
+
+  function setupAddressCascade(group){
+    const provinceSel = document.getElementById(group + 'Province');
+    const districtSel = document.getElementById(group + 'District');
+    const subdistrictSel = document.getElementById(group + 'Subdistrict');
+    const zipInput = document.getElementById(group + 'Zip');
+
+    provinceSel.addEventListener('change', function(){
+      const pid = Number(this.value);
+      const items = DISTRICTS.filter(d => d.province_id === pid)
+        .map(d => ({ value: d.id, label: d.name_th }))
+        .sort((a,b) => a.label.localeCompare(b.label, 'th'));
+      fillSelect(districtSel, items, items.length ? 'เลือกอำเภอ/เขต' : 'ไม่พบข้อมูล');
+      districtSel.disabled = !pid;
+      fillSelect(subdistrictSel, [], 'เลือกอำเภอก่อน');
+      subdistrictSel.disabled = true;
+      zipInput.value = '';
+    });
+
+    districtSel.addEventListener('change', function(){
+      const did = Number(this.value);
+      const items = SUBDISTRICTS.filter(s => s.district_id === did)
+        .map(s => ({ value: s.id, label: s.name_th, zip: s.zip_code }))
+        .sort((a,b) => a.label.localeCompare(b.label, 'th'));
+      subdistrictSel.innerHTML = '<option value="">' + (items.length ? 'เลือกตำบล/แขวง' : 'ไม่พบข้อมูล') + '</option>' +
+        items.map(it => `<option value="${it.value}" data-zip="${it.zip}">${it.label}</option>`).join('');
+      subdistrictSel.disabled = !did;
+      zipInput.value = '';
+    });
+
+    subdistrictSel.addEventListener('change', function(){
+      const opt = this.options[this.selectedIndex];
+      zipInput.value = opt && opt.dataset.zip ? opt.dataset.zip : '';
+    });
+  }
+  setupAddressCascade('org');
+  setupAddressCascade('mail');
+
+  function selectedText(sel){
+    const opt = sel.options[sel.selectedIndex];
+    return opt && opt.value ? opt.textContent : '';
+  }
+
+  // ---------------------------------------------------------------
+  // ที่อยู่จัดส่งเดียวกับองค์กร
+  // ---------------------------------------------------------------
+  const mailFields = ['mailAddrNo','mailMoo','mailSoi','mailRoad','mailProvince','mailDistrict','mailSubdistrict'];
+  function setMailingEnabled(enabled){
+    mailFields.forEach(id => { document.getElementById(id).disabled = enabled; });
+  }
+  function copyOrgToMailing(){
+    document.getElementById('mailAddrNo').value = form.querySelector('[name=orgAddrNo]').value;
+    document.getElementById('mailMoo').value = form.querySelector('[name=orgMoo]').value;
+    document.getElementById('mailSoi').value = form.querySelector('[name=orgSoi]').value;
+    document.getElementById('mailRoad').value = form.querySelector('[name=orgRoad]').value;
+    document.getElementById('mailZip').value = document.getElementById('orgZip').value;
+  }
+  document.getElementById('sameAsOrg').addEventListener('change', function(){
+    setMailingEnabled(this.checked);
+    if (this.checked) copyOrgToMailing();
+  });
+  setMailingEnabled(true);
+
+  // ---------------------------------------------------------------
+  // คำนวณยอดรวมค่าธรรมเนียม
+  // ---------------------------------------------------------------
+  function updateTotal(){
+    const checked = form.querySelector('input[name=duesPackage]:checked');
+    if (!checked) { totalFeeEl.textContent = '— บาท'; return; }
+    const fee = parseInt(checked.dataset.fee, 10);
+    totalFeeEl.textContent = (100 + fee + 20).toLocaleString('th-TH') + ' บาท';
+  }
+  form.querySelectorAll('input[name=duesPackage]').forEach(r => r.addEventListener('change', updateTotal));
+
+  // ---------------------------------------------------------------
+  // ลายมือชื่อ (signature pad)
+  // ---------------------------------------------------------------
+  const sigCanvas = document.getElementById('sigCanvas');
+  const sigCtx = sigCanvas.getContext('2d');
+  let sigDrawing = false, sigHasContent = false;
+
+  function resizeCanvas(){
+    const ratio = window.devicePixelRatio || 1;
+    const rect = sigCanvas.getBoundingClientRect();
+    sigCanvas.width = rect.width * ratio;
+    sigCanvas.height = rect.height * ratio;
+    sigCtx.scale(ratio, ratio);
+    sigCtx.lineWidth = 2;
+    sigCtx.lineCap = 'round';
+    sigCtx.strokeStyle = '#1F2A3C';
+  }
+  window.addEventListener('resize', resizeCanvas);
+  setTimeout(resizeCanvas, 50);
+
+  function getPos(e){
+    const rect = sigCanvas.getBoundingClientRect();
+    const point = e.touches ? e.touches[0] : e;
+    return { x: point.clientX - rect.left, y: point.clientY - rect.top };
+  }
+  function startDraw(e){ sigDrawing = true; sigHasContent = true; const p = getPos(e); sigCtx.beginPath(); sigCtx.moveTo(p.x, p.y); e.preventDefault(); }
+  function moveDraw(e){ if (!sigDrawing) return; const p = getPos(e); sigCtx.lineTo(p.x, p.y); sigCtx.stroke(); e.preventDefault(); }
+  function endDraw(){ sigDrawing = false; }
+
+  sigCanvas.addEventListener('mousedown', startDraw);
+  sigCanvas.addEventListener('mousemove', moveDraw);
+  window.addEventListener('mouseup', endDraw);
+  sigCanvas.addEventListener('touchstart', startDraw, { passive:false });
+  sigCanvas.addEventListener('touchmove', moveDraw, { passive:false });
+  sigCanvas.addEventListener('touchend', endDraw);
+
+  document.getElementById('sigClear').addEventListener('click', function(){
+    sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+    sigHasContent = false;
+  });
+
+  // ---------------------------------------------------------------
+  // ไฟล์แนบ: แปลงเป็น base64
+  // ---------------------------------------------------------------
+  const fileData = {};
+  const MAX_FILE_MB = 5;
+  document.querySelectorAll('.file-drop input[type=file]').forEach(input => {
+    input.addEventListener('change', function(){
+      const key = this.dataset.key;
+      const label = this.parentElement.querySelector('.fname');
+      const file = this.files[0];
+      if (!file) { delete fileData[key]; label.textContent = ''; return; }
+      if (file.size > MAX_FILE_MB * 1024 * 1024){
+        alert('ไฟล์ ' + file.name + ' มีขนาดเกิน ' + MAX_FILE_MB + ' MB');
+        this.value = '';
+        label.textContent = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = e => {
+        fileData[key] = { base64: e.target.result, name: file.name, mimeType: file.type };
+        label.textContent = '✓ ' + file.name;
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  // ---------------------------------------------------------------
+  // ส่งฟอร์ม
+  // ---------------------------------------------------------------
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    statusMsg.textContent = '';
+    statusMsg.className = 'status-msg';
+
+    if (!form.checkValidity()){
+      form.reportValidity();
+      return;
+    }
+    const goals = Array.from(form.querySelectorAll('input[name=orgGoals]:checked')).map(el => el.value);
+    if (goals.length === 0){
+      statusMsg.textContent = 'กรุณาเลือกเป้าหมายและกิจกรรมขององค์กรอย่างน้อย 1 ข้อ';
+      statusMsg.classList.add('error');
+      return;
+    }
+    if (!sigHasContent){
+      statusMsg.textContent = 'กรุณาลงลายมือชื่อในกรอบก่อนส่งใบสมัคร';
+      statusMsg.classList.add('error');
+      return;
+    }
+    if (SCRIPT_URL.indexOf('PASTE_YOUR') === 0){
+      statusMsg.textContent = 'ยังไม่ได้ตั้งค่า SCRIPT_URL ในไฟล์ index.html — โปรดดู README.md';
+      statusMsg.classList.add('error');
+      return;
+    }
+
+    const fd = new FormData(form);
+    const payload = {};
+    fd.forEach((v, k) => { if (k !== 'orgGoals') payload[k] = v; });
+    payload.orgGoals = goals;
+
+    payload.writtenDate = readDate('written');
+    payload.birthDate = readDate('birth');
+
+    payload.orgAddrNo = form.querySelector('[name=orgAddrNo]').value;
+    payload.orgMoo = form.querySelector('[name=orgMoo]').value;
+    payload.orgSoi = form.querySelector('[name=orgSoi]').value;
+    payload.orgRoad = form.querySelector('[name=orgRoad]').value;
+    payload.orgProvince = selectedText(document.getElementById('orgProvince'));
+    payload.orgDistrict = selectedText(document.getElementById('orgDistrict'));
+    payload.orgSubdistrict = selectedText(document.getElementById('orgSubdistrict'));
+    payload.orgZip = document.getElementById('orgZip').value;
+
+    const sameAsOrg = document.getElementById('sameAsOrg').checked;
+    if (sameAsOrg) copyOrgToMailing();
+    const mailProvinceText = sameAsOrg ? payload.orgProvince : selectedText(document.getElementById('mailProvince'));
+    const mailDistrictText = sameAsOrg ? payload.orgDistrict : selectedText(document.getElementById('mailDistrict'));
+    const mailSubdistrictText = sameAsOrg ? payload.orgSubdistrict : selectedText(document.getElementById('mailSubdistrict'));
+    payload.mailingAddress = [
+      'เลขที่ ' + document.getElementById('mailAddrNo').value,
+      'หมู่ ' + document.getElementById('mailMoo').value,
+      'ซอย ' + document.getElementById('mailSoi').value,
+      'ถนน ' + document.getElementById('mailRoad').value,
+      'ตำบล/แขวง ' + mailSubdistrictText,
+      'อำเภอ/เขต ' + mailDistrictText,
+      'จังหวัด ' + mailProvinceText,
+      'รหัสไปรษณีย์ ' + document.getElementById('mailZip').value
+    ].join(' ');
+
+    payload.totalFee = totalFeeEl.textContent;
+    payload.files = Object.assign({}, fileData, {
+      signatureImage: { base64: sigCanvas.toDataURL('image/png'), name: 'signature.png', mimeType: 'image/png' }
+    });
+    payload.action = 'submitApplication';
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'กำลังส่งใบสมัคร...';
+
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+      if (result.ok){
+        document.getElementById('appNoText').textContent = result.applicationNo;
+        document.getElementById('overlay').classList.add('show');
+      } else {
+        statusMsg.textContent = 'เกิดข้อผิดพลาด: ' + (result.error || 'ไม่ทราบสาเหตุ') +
+          (result.details ? ' (' + result.details.join(', ') + ')' : '');
+        statusMsg.classList.add('error');
+      }
+    } catch (err){
+      statusMsg.textContent = 'ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต';
+      statusMsg.classList.add('error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'ส่งใบสมัคร';
+    }
+  });
+</script>
+</body>
+</html>
